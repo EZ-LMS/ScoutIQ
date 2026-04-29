@@ -1,0 +1,10 @@
+{
+  "last_run_utc": "2026-04-29T04:57:59Z",
+  "season": 2025,
+  "stages": {
+    "batting": "ok (675 rows)",
+    "expected": "ok (251 rows)",
+    "quality": "ok (251 rows)",
+    "scored": "ok (251 rows)"
+  }
+}
