@@ -88,6 +88,11 @@ st.subheader("Position overview")
 POS_ORDER = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH", "OF", "UTIL"]
 
 pos_col = next((c for c in ("Pos", "position", "POS") if c in team_df.columns), None)
+
+# League-wide averages used for all absolute comparisons
+league_avg_xwoba = scored["xwOBA"].mean()
+league_avg_woba = scored["wOBA"].mean()
+
 if pos_col and not team_df[pos_col].dropna().empty:
     pos_summary = (
         team_df.groupby(pos_col, as_index=False)
@@ -96,21 +101,30 @@ if pos_col and not team_df[pos_col].dropna().empty:
             avg_wOBA=("wOBA", "mean"),
             avg_xwOBA=("xwOBA", "mean"),
             avg_score=("undervalued_score", "mean"),
-            avg_WAR=("WAR", "mean") if "WAR" in team_df.columns else ("wOBA", "count"),
         )
     )
+    # Color by xwOBA vs league average — this directly answers "is this position strong?"
+    # Undervalued Score is a regression/luck signal, not a production signal.
+    pos_summary["xwOBA_vs_avg"] = pos_summary["avg_xwOBA"] - league_avg_xwoba
+
     fig_heat = px.bar(
-        pos_summary.sort_values("avg_score"),
-        x=pos_col, y="avg_score",
-        color="avg_score",
+        pos_summary.sort_values("xwOBA_vs_avg"),
+        x=pos_col, y="xwOBA_vs_avg",
+        color="xwOBA_vs_avg",
         color_continuous_scale="RdYlGn",
-        range_color=(0, 100),
-        title=f"{team} {season} — Average Undervalued Score by position",
-        labels={pos_col: "Position", "avg_score": "Avg Score"},
+        color_continuous_midpoint=0,
+        title=f"{team} {season} — xwOBA vs league average by position",
+        labels={pos_col: "Position", "xwOBA_vs_avg": "xwOBA above/below avg"},
+        hover_data={"avg_xwOBA": ":.3f", "avg_wOBA": ":.3f", "avg_score": ":.0f"},
         height=320,
     )
-    fig_heat.add_hline(y=50, line_dash="dash", line_color="gray", annotation_text="league avg")
+    fig_heat.add_hline(y=0, line_dash="dash", line_color="gray", annotation_text="league avg")
     st.plotly_chart(fig_heat, use_container_width=True)
+    st.caption(
+        f"League avg xwOBA: **{league_avg_xwoba:.3f}**  ·  "
+        "Green = above average production  ·  Red = below average production  ·  "
+        "Undervalued Score (luck/regression) shown in the table below."
+    )
 else:
     st.info("Position data not available — run the roster scraper for position labels.")
 
@@ -130,27 +144,68 @@ st.dataframe(
 
 # ── Actionable flags ──────────────────────────────────────────────────────────
 st.subheader("Actionable flags")
-col_watch, col_concern = st.columns(2)
+
+# Three distinct buckets — each with a different recommended action:
+#
+# 1. Hold / watch  : wOBA below league avg, but xwOBA above → pure bad luck, stay patient
+# 2. True concern  : BOTH wOBA and xwOBA below league avg   → real skill issue, consider upgrade
+# 3. Regression risk: wOBA well above xwOBA (Sell High)     → performing above true skill level,
+#                     numbers likely to regress (still may be a good player — see Ben Rice)
+
+flag_watch   = team_df[
+    (team_df["wOBA"] < league_avg_woba) & (team_df["xwOBA"] >= league_avg_xwoba)
+]
+flag_concern = team_df[
+    (team_df["wOBA"] < league_avg_woba) & (team_df["xwOBA"] < league_avg_xwoba)
+]
+flag_regress = team_df[
+    (team_df["woba_gap"] < -0.025) & (team_df["xwOBA"] >= league_avg_xwoba)
+]
+
+col_watch, col_concern, col_regress = st.columns(3)
 
 with col_watch:
-    st.markdown("**Hold / watch 📊** — wOBA low but xwOBA strong (bad luck, not bad skill)")
-    watch = team_df[(team_df["wOBA"] < team_df["wOBA"].mean()) & (team_df["xwOBA"] >= team_df["xwOBA"].mean())]
-    if not watch.empty:
-        st.dataframe(watch[["Name", "wOBA", "xwOBA", "woba_gap"]].sort_values("woba_gap", ascending=False), use_container_width=True)
+    st.markdown("**📊 Hold / watch** — bad luck, not bad skill")
+    st.caption("wOBA < avg, xwOBA ≥ avg. Stay patient.")
+    if not flag_watch.empty:
+        st.dataframe(
+            flag_watch[["Name", "wOBA", "xwOBA", "woba_gap"]].sort_values("woba_gap", ascending=False),
+            use_container_width=True,
+        )
     else:
-        st.caption("None flagged.")
+        st.caption("None.")
 
 with col_concern:
-    st.markdown("**True concern 🔴** — both wOBA and xwOBA below league average")
-    concern = team_df[(team_df["wOBA"] < scored["wOBA"].mean()) & (team_df["xwOBA"] < scored["xwOBA"].mean())]
-    if not concern.empty:
-        st.dataframe(concern[["Name", "wOBA", "xwOBA", "BABIP"]].sort_values("xwOBA"), use_container_width=True)
+    st.markdown("**🔴 True concern** — real skill issue")
+    st.caption("Both wOBA and xwOBA below league avg. Consider upgrading.")
+    if not flag_concern.empty:
+        st.dataframe(
+            flag_concern[["Name", "wOBA", "xwOBA", "BABIP"]].sort_values("xwOBA"),
+            use_container_width=True,
+        )
     else:
-        st.caption("None flagged.")
+        st.caption("None.")
 
-# Cross-link to Free Agent Finder
+with col_regress:
+    st.markdown("**⚠️ Regression risk** — outperforming true skill")
+    st.caption("wOBA >> xwOBA (gap < −0.025) despite being above avg. Numbers likely to come down.")
+    if not flag_regress.empty:
+        st.dataframe(
+            flag_regress[["Name", "wOBA", "xwOBA", "woba_gap"]].sort_values("woba_gap"),
+            use_container_width=True,
+        )
+    else:
+        st.caption("None.")
+
+# Cross-link: weakest positions = xwOBA below league average (absolute production)
+# NOT Undervalued Score — a "Sell High" player like Ben Rice is strong, just lucky.
 if pos_col and not team_df[pos_col].dropna().empty:
-    weak_pos = team_df.loc[team_df["undervalued_score"] < 30, pos_col].dropna().unique().tolist()
+    weak_pos = (
+        team_df[team_df["xwOBA"] < league_avg_xwoba]
+        .groupby(pos_col)["xwOBA"].mean()
+        .sort_values()
+        .index.tolist()
+    )
     if weak_pos:
         pos_list = ", ".join(weak_pos)
-        st.info(f"Weakest positions: **{pos_list}**. → [Find free agents](/Free_Agent_Finder)")
+        st.info(f"Positions below league avg xwOBA: **{pos_list}** → [Find free agents](/Free_Agent_Finder)")
