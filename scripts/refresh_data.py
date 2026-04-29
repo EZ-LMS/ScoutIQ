@@ -196,6 +196,37 @@ def main(season: int) -> int:
         stages["scored"] = f"error: {e}"
         traceback.print_exc()
 
+    # Phase 2: rosters, salaries, free agents (best-effort — don't block scoring)
+    try:
+        print("[5/7] MLB 40-man rosters…")
+        from scripts.scrape_rosters import scrape_all_rosters
+        rosters = scrape_all_rosters()
+        _safe_write(rosters, DATA_DIR / "rosters.parquet")
+        stages["rosters"] = f"ok ({len(rosters)} rows)"
+    except Exception as e:
+        stages["rosters"] = f"error: {e}"
+        traceback.print_exc()
+
+    try:
+        print("[6/7] Cot's Contracts salaries…")
+        from scripts.scrape_salaries import scrape_all_salaries
+        salaries = scrape_all_salaries()
+        _safe_write(salaries, DATA_DIR / "salaries.parquet")
+        stages["salaries"] = f"ok ({len(salaries)} rows)"
+    except Exception as e:
+        stages["salaries"] = f"error: {e}"
+        traceback.print_exc()
+
+    try:
+        print("[7/7] Free agents…")
+        from scripts.scrape_free_agents import scrape_free_agents
+        fa = scrape_free_agents(season)
+        _safe_write(fa, DATA_DIR / "free_agents.parquet")
+        stages["free_agents"] = f"ok ({len(fa)} rows)"
+    except Exception as e:
+        stages["free_agents"] = f"error: {e}"
+        traceback.print_exc()
+
     write_status(stages, season)
     print("\nStages:", json.dumps(stages, indent=2))
     return 0 if all(v.startswith("ok") for v in stages.values()) else 1

@@ -54,6 +54,30 @@ def load_status() -> dict:
     return json.loads(path.read_text())
 
 
+@st.cache_data(ttl=CACHE_TTL)
+def load_rosters() -> pd.DataFrame:
+    path = DATA_DIR / "rosters.parquet"
+    if not path.exists():
+        return pd.DataFrame()
+    return pd.read_parquet(path)
+
+
+@st.cache_data(ttl=CACHE_TTL)
+def load_salaries() -> pd.DataFrame:
+    path = DATA_DIR / "salaries.parquet"
+    if not path.exists():
+        return pd.DataFrame()
+    return pd.read_parquet(path)
+
+
+@st.cache_data(ttl=CACHE_TTL)
+def load_free_agents() -> pd.DataFrame:
+    path = DATA_DIR / "free_agents.parquet"
+    if not path.exists():
+        return pd.DataFrame()
+    return pd.read_parquet(path)
+
+
 def available_seasons() -> list[int]:
     """All seasons present on disk, newest first."""
     seasons = []
