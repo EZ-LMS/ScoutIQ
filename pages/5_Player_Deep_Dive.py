@@ -14,11 +14,13 @@ sys.path.insert(0, str(ROOT))
 
 from app import render_sidebar  # noqa: E402
 from scoutiq import data_loader  # noqa: E402
+from scoutiq.help_link import help_link  # noqa: E402
 
 st.set_page_config(page_title="Player Deep Dive — ScoutIQ", page_icon="⚾", layout="wide")
 render_sidebar()
 
 st.title("Player Deep Dive")
+help_link("module_player")
 st.caption("Surface stats vs. Statcast quality, trend over recent seasons.")
 
 season = st.session_state["season"]

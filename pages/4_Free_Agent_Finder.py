@@ -13,12 +13,14 @@ sys.path.insert(0, str(ROOT))
 
 from app import render_sidebar  # noqa: E402
 from scoutiq import data_loader  # noqa: E402
+from scoutiq.help_link import help_link  # noqa: E402
 from scoutiq.score import compute_score, DEFAULT_WEIGHTS  # noqa: E402
 
 st.set_page_config(page_title="Free Agent Finder — ScoutIQ", page_icon="⚾", layout="wide")
 render_sidebar()
 
 st.title("Free Agent Finder")
+help_link("module_fa")
 st.caption("Market-undervalued players available for signing — filtered by position need.")
 
 season = st.session_state["season"]

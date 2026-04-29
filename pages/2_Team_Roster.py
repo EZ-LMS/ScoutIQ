@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from app import render_sidebar  # noqa: E402
 from scoutiq import data_loader  # noqa: E402
+from scoutiq.help_link import help_link  # noqa: E402
 from scoutiq.salary import add_dollar_per_war, fmt_salary  # noqa: E402
 from scoutiq.score import compute_score  # noqa: E402
 
@@ -21,6 +22,7 @@ st.set_page_config(page_title="Team Roster — ScoutIQ", page_icon="⚾", layout
 render_sidebar()
 
 st.title("Team Roster Analysis")
+help_link("module_roster")
 st.caption("Position-by-position breakdown: surface stats, Statcast quality, and salary efficiency.")
 
 season = st.session_state["season"]

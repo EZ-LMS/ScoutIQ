@@ -25,6 +25,7 @@ def _init_state() -> None:
     st.session_state.setdefault("team", "SF")
     st.session_state.setdefault("min_pa", 200)
     st.session_state.setdefault("weights", dict(DEFAULT_WEIGHTS))
+    st.session_state.setdefault("lang", "EN")
 
 
 def render_sidebar() -> None:
@@ -44,6 +45,13 @@ def render_sidebar() -> None:
             w["woba_gap"] = st.slider("xwOBA − wOBA gap", 0, 100, int(w["woba_gap"]))
             w["slg_gap"] = st.slider("xSLG − SLG gap", 0, 100, int(w["slg_gap"]))
             w["babip_luck"] = st.slider("BABIP luck", 0, 100, int(w["babip_luck"]))
+
+        st.divider()
+        lang = st.session_state.get("lang", "EN")
+        if st.button("🌐 中文" if lang == "EN" else "🌐 English", use_container_width=True):
+            st.session_state["lang"] = "zh" if lang == "EN" else "EN"
+            st.rerun()
+        st.page_link("pages/0_Guide.py", label="📖 Guide / 說明文件", icon="📖")
 
         status = data_loader.load_status()
         if status:
