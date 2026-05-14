@@ -12,32 +12,81 @@ SECTIONS: list[dict] = [
         "id": "overview",
         "title": {"en": "What is ScoutIQ?", "zh": "ScoutIQ 是什麼？"},
         "en": """
-ScoutIQ is a baseball player intelligence platform built for MLB front-office analysts and scouts.
+## The problem every front office faces
 
-**The core thesis:** A player's *surface statistics* (the numbers in the box score) often diverge from
-their *underlying quality* (what Statcast says about how hard and well they hit the ball).
-That divergence — caused by luck, sequencing, and sample noise — creates **market inefficiencies**:
-players who are undervalued (surface looks bad, underlying is strong) or overvalued (surface looks
-good, underlying is weak).
+Every MLB roster decision comes down to the same question: **is this player's performance real, or is it noise?**
 
-ScoutIQ surfaces these inefficiencies using an **Undervalued Score** (0–100) and applies it to four
-decision contexts:
-1. **League-wide** buy-low / sell-high signals
-2. **Team roster** position-by-position health check
-3. **Free agent market** CP value search
-4. **Single player** deep-dive with trend analysis
+A hitter batting .210 in May might be struggling — or he might be hitting the ball at 105 mph into defenders' gloves every night. A player on a hot streak might be genuinely elite — or he might be running a .390 BABIP that will regress to .300 the moment his luck normalizes.
+
+Traditional box-score stats can't answer this question. They capture *what happened* — not *how well the player actually hit the ball.*
+
+---
+
+## The solution: expected stats + a single score
+
+**ScoutIQ** integrates MLB's Statcast system with traditional box-score data to build a player intelligence platform for front-office decision-making.
+
+The core output is the **Undervalued Score (0–100)** — a composite that measures how far a player's *expected* production (based on exit velocity and launch angle) diverges from their *surface* production (the numbers in the box score). That gap is caused by luck, sequencing, and park factors — and it's almost always temporary.
+
+> "The expected stats era has changed how we evaluate players.
+> We now have a much cleaner view of who's actually hitting the ball well." — typical front-office framing
+
+---
+
+## Five modules, one workflow
+
+| Module | Question answered |
+|--------|------------------|
+| **1 · League Intelligence** | Which hitters league-wide have the biggest gap between quality and results right now? |
+| **2 · Team Roster** | On my roster, which positions are genuinely weak vs. just unlucky? |
+| **3 · Call-Up Evaluator** | Does my AAA system have anyone ready to upgrade a weak spot? |
+| **4 · Free Agent Finder** | In the FA market, who's undervalued because of recent bad luck — not skill decline? |
+| **5 · Player Deep Dive** | For a specific hitter: is the current price (trade, salary, waiver) justified? |
+
+---
+
+## Who it's for
+
+ScoutIQ is designed for **MLB R&D analysts, pro scouts, and front-office decision-makers** who need to move fast during the season — evaluating waiver claims, assessing trade targets, or deciding which prospect is ready for a call-up.
+
+All data refreshes nightly via automated pipelines. No manual data pulls required.
 """,
         "zh": """
-ScoutIQ 是一個棒球球員分析平台，專為 MLB 球隊的分析師與球探設計。
+## 每支球隊面臨的問題
 
-**核心理念：** 球員的*表面數據*（打擊率、上壘率等出現在比分欄的數字）往往和他們的*底層品質*（Statcast 測量的擊球速度、角度等）存在落差。
-這個落差由運氣、時機與樣本誤差造成，形成**市場效率失靈**：被低估的球員（表面看起來差，但擊球品質很好）或被高估的球員（表面好看，但擊球品質不支撐）。
+每一個 MLB 陣容決策都回歸同一個問題：**這位球員的表現是真實能力，還是雜訊？**
 
-ScoutIQ 透過 **Undervalued Score（0–100 分）** 找出這些落差，並應用在四個決策場景：
-1. **全聯盟**買入低估 / 賣出高估信號
-2. **球隊陣容**逐位置健康檢查
-3. **自由球員市場**性價比搜尋
-4. **單一球員**完整分析與趨勢圖
+五月打擊率 .210 的打者可能真的在低潮 — 也可能每晚都把球打到時速 105 英里，只是剛好全部正面打到守備員。處於火熱狀態的球員可能真的是菁英 — 也可能是 .390 的 BABIP 在作祟，一旦運氣回歸就會掉回 .300。
+
+傳統的比分欄數據無法回答這個問題。它記錄的是*發生了什麼* — 而不是*球員實際上打得有多好*。
+
+---
+
+## 解方：預期數據 + 一個分數
+
+**ScoutIQ** 整合 MLB Statcast 系統與傳統數據，打造一個服務球隊管理決策的球員智能平台。
+
+核心輸出是 **Undervalued Score（0–100）** — 一個衡量球員*預期*產出（基於出棒速度與擊球角度）和*表面*產出（比分欄數字）落差的複合指標。這個落差由運氣、時機和球場因素造成，而且幾乎都是暫時性的。
+
+---
+
+## 五個模組，一套工作流
+
+| 模組 | 解答的問題 |
+|------|-----------|
+| **1 · 全聯盟概覽** | 全聯盟中哪些打者的品質與成績落差最大？ |
+| **2 · 球隊陣容** | 我的陣容中哪個守備位置是真正的弱點，哪個只是運氣差？ |
+| **3 · 召喚評估** | 我的 AAA 農場中有沒有人準備好補強弱點？ |
+| **4 · 自由球員搜尋** | 市場上哪些球員因為近期壞運氣而被低估，而非能力衰退？ |
+| **5 · 單一球員分析** | 對於特定打者：目前的市場價格（交易、薪資、認領）是否合理？ |
+
+---
+
+## 使用對象
+
+ScoutIQ 專為 **MLB R&D 分析師、職業球探和球隊管理決策者**設計，需要在賽季中快速決策 — 評估認領名單、判斷交易目標，或決定哪個新秀已準備好上大聯盟。
+
+所有數據透過自動化流程每晚更新，不需要手動撈取資料。
 """,
     },
     # ── Undervalued Score ─────────────────────────────────────────────────────
@@ -392,6 +441,107 @@ The Team Roster page generates three types of flags. Each requires a **different
 - **行動：** 不要只看當前表面數字就簽長約或付高薪。合約估值應以 xwOBA 為基準。
 """,
     },
+    # ── Data Sources ──────────────────────────────────────────────────────────
+    {
+        "id": "data_sources",
+        "title": {"en": "Data Sources & Methodology", "zh": "資料來源與方法論"},
+        "en": """
+ScoutIQ aggregates data from five primary sources, all fetched automatically via a nightly
+GitHub Actions pipeline. Data is pre-computed and stored as Parquet files — the app reads
+from disk instantly, never making live API calls during your session.
+
+---
+
+### Primary data sources
+
+| Source | Data provided | Access method |
+|--------|--------------|---------------|
+| **Baseball Savant** (MLB Statcast) | xwOBA, xBA, xSLG, xISO, Exit Velocity, Launch Angle, Barrel%, Hard Hit% | [`pybaseball`](https://github.com/jldbc/pybaseball) — `statcast_batter_expected_stats()`, `statcast_batter_exitvelo_barrels()` |
+| **Baseball Reference** | AVG, OBP, SLG, PA, AB, HR, K, BB, SF — surface batting | [`pybaseball`](https://github.com/jldbc/pybaseball) — `batting_stats_bref()` |
+| **MLB Stats API** | 40-man rosters (team, position), Triple-A batting stats & affiliate mapping | Direct REST — `statsapi.mlb.com/api/v1` |
+| **Cot's Baseball Contracts** (Baseball Prospectus) | Player salaries by team | Web scraping via `pandas.read_html` |
+| **Baseball Reference FA Tracker** | Current free-agent list | Web scraping via `BeautifulSoup` |
+
+> **Note on FanGraphs:** FanGraphs `batting_stats()` currently returns HTTP 403 on automated requests.
+> We use Baseball Reference for surface stats and MLB's own Statcast API for quality-of-contact.
+
+---
+
+### Key derived stats
+
+| Derived stat | Formula |
+|-------------|---------|
+| BABIP | `(H − HR) / (AB − K − HR + SF)` |
+| K% | `SO / PA` |
+| BB% | `BB / PA` |
+| ISO | `SLG − AVG` |
+| woba_gap | `xwOBA − wOBA` |
+| BABIP_luck | `BABIP − xBABIP_proxy` (league BABIP by GB% decile) |
+| MLE wOBA (AAA) | `wOBA × 0.82` (Davenport) |
+
+---
+
+### Refresh schedule
+
+Nightly at **09:00 UTC** via GitHub Actions:
+
+```
+1 → Baseball Reference batting   5 → 40-man rosters (MLB Stats API)
+2 → Statcast expected stats      6 → Salaries (Cot's Contracts)
+3 → Statcast quality of contact  7 → Free agent list (BR)
+4 → Score & write Parquet        8 → Triple-A batting (MLB Stats API)
+```
+
+If any step fails, the previous parquet is preserved. The sidebar shows the last successful run timestamp.
+""",
+        "zh": """
+ScoutIQ 從五個主要來源整合資料，全部透過每晚自動執行的 GitHub Actions 流程取得。
+資料預先計算後儲存為 Parquet 檔案 — 應用程式從磁碟讀取，使用過程中不會即時呼叫外部 API。
+
+---
+
+### 主要資料來源
+
+| 來源 | 提供的資料 | 取得方式 |
+|------|----------|---------|
+| **Baseball Savant**（MLB Statcast） | xwOBA、xBA、xSLG、xISO、出棒速度、擊球角度、Barrel%、Hard Hit% | [`pybaseball`](https://github.com/jldbc/pybaseball) — `statcast_batter_expected_stats()`、`statcast_batter_exitvelo_barrels()` |
+| **Baseball Reference** | 打擊率、上壘率、長打率、打席數、打數、全打、三振、保送（表面打擊數據） | [`pybaseball`](https://github.com/jldbc/pybaseball) — `batting_stats_bref()` |
+| **MLB Stats API** | 40 人名單（球隊、守備位置）、3A 打擊數據與附屬球隊對應 | 直接呼叫 REST API — `statsapi.mlb.com/api/v1` |
+| **Cot's Baseball Contracts**（Baseball Prospectus） | 各球隊球員薪資 | 網頁爬取，使用 `pandas.read_html` |
+| **Baseball Reference FA Tracker** | 當前自由球員名單 | 網頁爬取，使用 `BeautifulSoup` |
+
+> **關於 FanGraphs：** FanGraphs `batting_stats()` 目前對自動化請求回傳 HTTP 403，改用 Baseball Reference。
+
+---
+
+### 主要衍生指標
+
+| 衍生指標 | 計算公式 |
+|---------|---------|
+| BABIP | `(安打 − 全打) / (打數 − 三振 − 全打 + 犧牲打)` |
+| K% | `三振 / 打席` |
+| BB% | `保送 / 打席` |
+| ISO | `長打率 − 打擊率` |
+| woba_gap | `xwOBA − wOBA` |
+| BABIP_luck | `BABIP − xBABIP_proxy`（按 GB% 十分位數的聯盟 BABIP 平均） |
+| MLE wOBA（3A） | `wOBA × 0.82`（Davenport 轉換） |
+
+---
+
+### 更新排程
+
+每晚 **09:00 UTC** 自動執行（GitHub Actions）：
+
+```
+1 → Baseball Reference 打擊數據   5 → 40 人名單（MLB Stats API）
+2 → Statcast 預期數據             6 → 薪資（Cot's Contracts）
+3 → Statcast 擊球品質             7 → 自由球員名單（BR）
+4 → 計算分數並寫入 Parquet        8 → 3A 打擊數據（MLB Stats API）
+```
+
+任何步驟失敗時保留舊的 parquet 檔案。側邊欄顯示最近一次成功更新的時間。
+""",
+    },
     # ── Module guides ─────────────────────────────────────────────────────────
     {
         "id": "module_league",
@@ -477,6 +627,80 @@ The "Positions below league avg xwOBA" link pre-filters the Free Agent page to t
 
 ### 跨模組連結
 「低於聯盟平均 xwOBA 的位置」連結會預篩選自由球員頁面，直接顯示該守備位置的候選人。
+""",
+    },
+    {
+        "id": "module_callup",
+        "title": {"en": "Module 3 — Call-Up Evaluator", "zh": "Module 3 — 召喚評估"},
+        "en": """
+**Question answered:** On my team's AAA roster, does anyone project to be an upgrade over the
+current MLB incumbent at their position — on an MLB-equivalent basis?
+
+### How it works
+
+1. Fetch the team's 40-man MLB roster (positions from MLB Stats API)
+2. Fetch all AAA batters for that team's Triple-A affiliate
+3. Apply **Davenport MLB-equivalent (MLE)** translations to AAA stats
+4. Compare: any AAA prospect whose MLE wOBA exceeds the team's MLB average is flagged
+
+### Davenport MLE multipliers used
+
+| Stat | Multiplier | Direction |
+|------|-----------|-----------|
+| wOBA | × 0.82 | Down — AAA pitching is weaker |
+| OBP  | × 0.80 | Down |
+| SLG  | × 0.78 | Down — power translates least well |
+| AVG  | × 0.81 | Down |
+| ISO  | × 0.75 | Down |
+| K%   | × 1.10 | **Up** — hitters strike out more against MLB pitching |
+| BB%  | × 0.95 | Down slightly |
+
+> These multipliers are derived from Clay Davenport's translation methodology, comparing
+> AAA-to-MLB transition cohorts. They are averages — individual translation depends on park,
+> age, and pitch mix.
+
+### Important caveats
+
+- **No AAA Statcast data.** xwOBA, Barrel%, EV are not publicly available for Triple-A.
+  Comparisons use surface stats only. A prospect with elite hard-hit rate might be *underrated*
+  by this tool.
+- **Position matching is approximate.** The MLB Stats API gives a primary position, which may
+  not reflect where a prospect will actually play.
+- **Sample size matters.** Filter by minimum PA (default: 100). Smaller samples are noisier.
+- **MLE wOBA above team average ≠ guaranteed upgrade.** Defense, age, and cost control matter too.
+""",
+        "zh": """
+**解答的問題：** 我球隊的 3A 名單中，有沒有人在 MLB 換算基礎上，預計能超越現有大聯盟先發球員？
+
+### 運作方式
+
+1. 抓取球隊的 40 人大聯盟名單（守備位置來自 MLB Stats API）
+2. 抓取該球隊 3A 附屬球隊的所有打者
+3. 對 3A 數據套用 **Davenport MLB 換算（MLE）** 轉換
+4. 比較：任何 MLE wOBA 超過球隊 MLB 平均值的 3A 新秀都會被標記
+
+### 使用的 Davenport MLE 乘數
+
+| 指標 | 乘數 | 方向 |
+|------|------|------|
+| wOBA | × 0.82 | 下調 — 3A 投手水準較低 |
+| OBP  | × 0.80 | 下調 |
+| SLG  | × 0.78 | 下調 — 長打力轉換最難 |
+| AVG  | × 0.81 | 下調 |
+| ISO  | × 0.75 | 下調 |
+| K%   | × 1.10 | **上調** — 打者面對大聯盟投手三振率更高 |
+| BB%  | × 0.95 | 略微下調 |
+
+> 這些乘數源自 Clay Davenport 的換算方法論，比較 3A 升大聯盟的歷史群組數據。
+> 它們是平均值 — 個別球員的換算還取決於球場、年齡和投手組成。
+
+### 重要注意事項
+
+- **沒有 3A Statcast 數據。** xwOBA、Barrel%、出棒速度等指標在 3A 層級無法公開取得。
+  比較僅基於表面數據。擊球品質出色的新秀可能被此工具*低估*。
+- **守備位置對應是近似值。** MLB Stats API 提供主要守備位置，不一定反映新秀實際將防守的位置。
+- **樣本大小很重要。** 透過最低打席數篩選（預設：100 打席）。樣本較小的數字雜訊較多。
+- **MLE wOBA 超過球隊平均 ≠ 一定是升級。** 守備、年齡和薪資控制年限同樣重要。
 """,
     },
     {

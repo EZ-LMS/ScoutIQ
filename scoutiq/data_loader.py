@@ -78,6 +78,14 @@ def load_free_agents() -> pd.DataFrame:
     return pd.read_parquet(path)
 
 
+@st.cache_data(ttl=CACHE_TTL)
+def load_aaa_batting(season: int) -> pd.DataFrame:
+    path = DATA_DIR / f"aaa_batting_{season}.parquet"
+    if not path.exists():
+        return pd.DataFrame()
+    return pd.read_parquet(path)
+
+
 def available_seasons() -> list[int]:
     """All seasons present on disk, newest first."""
     seasons = []

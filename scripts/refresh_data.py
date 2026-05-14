@@ -218,13 +218,23 @@ def main(season: int) -> int:
         traceback.print_exc()
 
     try:
-        print("[7/7] Free agents…")
+        print("[7/8] Free agents…")
         from scripts.scrape_free_agents import scrape_free_agents
         fa = scrape_free_agents(season)
         _safe_write(fa, DATA_DIR / "free_agents.parquet")
         stages["free_agents"] = f"ok ({len(fa)} rows)"
     except Exception as e:
         stages["free_agents"] = f"error: {e}"
+        traceback.print_exc()
+
+    try:
+        print("[8/8] Triple-A batting stats…")
+        from scripts.fetch_aaa import fetch_aaa_batting
+        aaa = fetch_aaa_batting(season)
+        _safe_write(aaa, DATA_DIR / f"aaa_batting_{season}.parquet")
+        stages["aaa"] = f"ok ({len(aaa)} rows)"
+    except Exception as e:
+        stages["aaa"] = f"error: {e}"
         traceback.print_exc()
 
     write_status(stages, season)
