@@ -1,14 +1,14 @@
 {
-  "last_run_utc": "2026-07-08T10:57:03Z",
+  "last_run_utc": "2026-07-09T11:48:44Z",
   "season": 2026,
   "stages": {
-    "batting": "ok (592 rows)",
-    "expected": "ok (253 rows)",
-    "quality": "ok (253 rows)",
-    "scored": "ok (253 rows)",
-    "rosters": "ok (1346 rows)",
+    "batting": "ok (593 rows)",
+    "expected": "ok (254 rows)",
+    "quality": "ok (252 rows)",
+    "scored": "ok (254 rows)",
+    "rosters": "ok (1345 rows)",
     "salaries": "ok (0 rows)",
     "free_agents": "ok (430 rows)",
-    "aaa": "ok (156 rows)"
+    "aaa": "ok (155 rows)"
   }
 }
