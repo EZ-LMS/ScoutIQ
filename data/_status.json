@@ -1,5 +1,5 @@
 {
-  "last_run_utc": "2026-09-10T13:16:05Z",
+  "last_run_utc": "2026-09-11T13:09:38Z",
   "season": 2026,
   "stages": {
     "batting": "ok (656 rows)",
@@ -9,6 +9,6 @@
     "rosters": "ok (1367 rows)",
     "salaries": "ok (0 rows)",
     "free_agents": "ok (430 rows)",
-    "aaa": "ok (130 rows)"
+    "aaa": "ok (129 rows)"
   }
 }
